@@ -1,0 +1,32 @@
+{
+  "THOMPSON_FLOOR0_WASH": {
+    "display_name": "Ground Floor Washing Machine",
+    "is_on": false,
+    "last_updated": ""
+  },
+  "THOMPSON_FLOOR0_DRY": {
+    "display_name": "Ground Floor Dryer",
+    "is_on": false,
+    "last_updated": ""
+  },
+  "THOMPSON_FLOOR1_WASH": {
+    "display_name": "First Floor Washing Machine",
+    "is_on": false,
+    "last_updated": ""
+  },
+  "THOMPSON_FLOOR1_DRY": {
+    "display_name": "First Floor Dryer",
+    "is_on": false,
+    "last_updated": ""
+  },
+  "THOMPSON_FLOOR2_WASH": {
+    "display_name": "Top Floor Washing Machine",
+    "is_on": false,
+    "last_updated": ""
+  },
+  "THOMPSON_FLOOR2_DRY": {
+    "display_name": "Top Floor Dryer",
+    "is_on": false,
+    "last_updated": ""
+  }
+}
