@@ -50,9 +50,9 @@ impl Database {
     }
 
     fn update_entry(&self, new_entry: SetInput) -> Result<DeviceObjectSQL> {
-        let mut statment = self.connection.prepare("SELECT * FROM devices")?;
-
-        let rows: Vec<DeviceObjectSQL> = statment.query_map((), |x| {
+        // Get the corresponding entry from the database
+        let mut statment = self.connection.prepare("SELECT * FROM devices WHERE device_id = ?1")?;
+        let rows: Vec<DeviceObjectSQL> = statment.query_map([&new_entry.machine_id], |x| {
             Ok(DeviceObjectSQL {
                 device_id: x.get(0)?,
                 display_name: x.get(1)?,
@@ -60,15 +60,7 @@ impl Database {
                 last_changed: x.get(3)?,
                 is_on: x.get(4)?
             })
-        })?.filter_map(|f| {
-            match f {
-                Ok(ref d) => {
-                    if f.as_ref().unwrap().device_id == new_entry.machine_id { Some(d.clone()) }
-                    else { None }
-                },
-                Err(_) => None
-            }
-        }).collect();
+        })?.filter_map(|x| x.ok()).collect();
 
         if rows.len() != 1 {
             return Err(rusqlite::Error::InvalidQuery)
@@ -199,6 +191,10 @@ async fn main() {
     let app = Router::new()
         .route("/get", get(get_data))
         .route("/set", post(set_data).get(index));
+
+    if !std::path::Path::new("data.db").exists() {
+        setup_sqlite_db().await;
+    }
 
     axum::serve(
         tokio::net::TcpListener::bind("localhost:3000")
