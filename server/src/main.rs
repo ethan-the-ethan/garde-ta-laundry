@@ -2,6 +2,7 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 use axum::http::StatusCode;
+use axum::extract::Path;
 use tokio;
 use rusqlite::{Connection, Result};
 
@@ -10,11 +11,6 @@ use rusqlite::{Connection, Result};
 struct SetInput {
     machine_id: String,
     is_on: bool,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct GetOutput {
-    example: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -96,8 +92,29 @@ impl Database {
             Err(e) => Err(e),
         }
     }
-}
 
+    fn get_entry(&self, device_id: String) -> Result<DeviceObjectSQL> {
+        // Get the corresponding entry from the database
+        let mut statment = self.connection.prepare("SELECT * FROM devices WHERE device_id = ?1")?;
+        let rows: Vec<DeviceObjectSQL> = statment.query_map([&device_id], |x| {
+            Ok(DeviceObjectSQL {
+                device_id: x.get(0)?,
+                display_name: x.get(1)?,
+                last_updated: x.get(2)?,
+                last_changed: x.get(3)?,
+                is_on: x.get(4)?
+            })
+        })?.filter_map(|x| x.ok()).collect();
+
+        if rows.len() != 1 {
+            return Err(rusqlite::Error::InvalidQuery)
+        }
+
+        let entry = rows.get(0).ok_or(rusqlite::Error::InvalidQuery)?.clone();
+
+        Ok(entry)
+    }
+}
 
 async fn set_data(Json(body): Json<SetInput>) -> StatusCode {
     let db = match Database::open("data.db") {
@@ -114,10 +131,17 @@ async fn set_data(Json(body): Json<SetInput>) -> StatusCode {
     }
 }
 
-async fn get_data() -> Result<Json<GetOutput>, StatusCode> {
-    Ok(Json::from(GetOutput {
-        example: "hello".to_string(),
-    }))
+async fn get_data(Path(device_id): Path<String>,) -> Result<Json<DeviceObjectSQL>, StatusCode> {
+    let db = match Database::open("data.db") {
+        Ok(a) => a,
+        Err(_) => { return Err(StatusCode::INTERNAL_SERVER_ERROR) }
+    };
+
+    let fetched_entry = db.get_entry(device_id);
+
+    if !fetched_entry.is_ok() { return Err(StatusCode::BAD_REQUEST); }
+
+    Ok(Json::from(fetched_entry.unwrap()))
 }
 
 async fn index() -> axum::response::Html<String> {
@@ -189,7 +213,7 @@ async fn setup_sqlite_db() {
 #[tokio::main]
 async fn main() {
     let app = Router::new()
-        .route("/get", get(get_data))
+        .route("/get/{device_id}", get(get_data))
         .route("/set", post(set_data).get(index));
 
     if !std::path::Path::new("data.db").exists() {
