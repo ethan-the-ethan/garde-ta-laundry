@@ -1,7 +1,9 @@
+use axum::body::Body;
+use axum::response::IntoResponse;
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
-use axum::http::StatusCode;
+use axum::http::{Response, StatusCode};
 use axum::extract::Path;
 use tokio;
 use rusqlite::{Connection, Result};
@@ -22,6 +24,18 @@ struct DeviceObjectSQL {
     is_on: bool
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct ErrorResponse {
+    message: String,
+    error: String
+}
+
+impl ErrorResponse {
+    fn new(message: &str, error: rusqlite::Error) -> ErrorResponse {
+        ErrorResponse { message: message.to_string(), error: format!("{error:?}") }
+    }
+}
+
 #[derive(Debug)]
 struct Database {
     connection: rusqlite::Connection
@@ -39,7 +53,7 @@ impl Database {
                 last_changed    TEXT NOT NULL,
                 is_on           BOOLEAN
             )",
-            (), // empty list of parameters.
+            (),
         )?;
 
         Ok(Database { connection: conn })
@@ -66,10 +80,10 @@ impl Database {
 
         if existing_entry.is_on == new_entry.is_on {
             // No state change needed
-            existing_entry.last_updated = chrono::Local::now().to_string();
+            existing_entry.last_updated = chrono::Local::now().to_rfc3339();
         } else {
             // Change state
-            let now = chrono::Local::now().to_string();
+            let now = chrono::Local::now().to_rfc3339();
             existing_entry.last_changed = now.clone();
             existing_entry.last_updated = now;
             existing_entry.is_on = new_entry.is_on;
@@ -116,91 +130,122 @@ impl Database {
     }
 }
 
-async fn set_data(Json(body): Json<SetInput>) -> StatusCode {
+async fn set_data(Json(body): Json<SetInput>) -> Response<Body> {
     let db = match Database::open("data.db") {
         Ok(a) => a,
-        Err(_) => { return StatusCode::INTERNAL_SERVER_ERROR }
+        Err(e) => {
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json::from(
+                ErrorResponse::new("internal server error at read database", e))).into_response()
+        }
     };
 
     match db.update_entry(body) {
-        Ok(_) => StatusCode::OK,
+        Ok(a) => (StatusCode::OK, Json::from(a)).into_response(),
         Err(e) => {
             println!("Err! {e:?}");
-            StatusCode::BAD_REQUEST
+            (StatusCode::BAD_REQUEST, Json::from(
+                ErrorResponse::new("bad request at update entry", e))).into_response()
         }
     }
 }
 
-async fn get_data(Path(device_id): Path<String>,) -> Result<Json<DeviceObjectSQL>, StatusCode> {
+async fn get_data(Path(device_id): Path<String>,) -> Result<Json<DeviceObjectSQL>, Response<Body>> {
     let db = match Database::open("data.db") {
         Ok(a) => a,
-        Err(_) => { return Err(StatusCode::INTERNAL_SERVER_ERROR) }
+        Err(e) => { return Err((StatusCode::INTERNAL_SERVER_ERROR, Json::from(
+            ErrorResponse::new("internal server error at read database", e))).into_response())
+        }
     };
 
-    let fetched_entry = db.get_entry(device_id);
-
-    if !fetched_entry.is_ok() { return Err(StatusCode::BAD_REQUEST); }
-
-    Ok(Json::from(fetched_entry.unwrap()))
+    match db.get_entry(device_id) {
+        Ok(x) => Ok(Json::from(x)),
+        Err(e) => Err((StatusCode::BAD_REQUEST, Json::from(
+            ErrorResponse::new("bad request at get entry", e))).into_response())
+    }
 }
 
 async fn index() -> axum::response::Html<String> {
     axum::response::Html(std::fs::read_to_string("./pages/index.html").unwrap())
 }
 
+async fn index_css() -> axum::response::Response<String> {
+    axum::response::Response::builder()
+        .status(200)
+        .header("Content-Type", "text/css")
+        .body(std::fs::read_to_string("./pages/index.css").unwrap())
+        .unwrap()
+}
+
+async fn index_js() -> axum::response::Response<String> {
+    axum::response::Response::builder()
+        .status(200)
+        .header("Content-Type", "text/javascript")
+        .body(std::fs::read_to_string("./pages/index.js").unwrap())
+        .unwrap()
+}
+
+
 async fn setup_sqlite_db() {
-    // This is a one and done thing. Generates a new database.
+    // Generates a new, empty database.
     let conn = Connection::open("data.db").expect("failed to open connection");
 
     conn.execute(
-            "CREATE TABLE IF NOT EXISTS devices (
-                device_id       TEXT NOT NULL PRIMARY KEY,
-                display_name    TEXT NOT NULL,
-                last_updated    TEXT NOT NULL,
-                last_changed    TEXT NOT NULL,
-                is_on           BOOLEAN
-            )",
-            (), // empty list of parameters.
-        ).expect("Failed to execute command");
+        "CREATE TABLE IF NOT EXISTS devices (
+            device_id       TEXT NOT NULL PRIMARY KEY,
+            display_name    TEXT NOT NULL,
+            last_updated    TEXT NOT NULL,
+            last_changed    TEXT NOT NULL,
+            is_on           BOOLEAN
+        )",
+        (),
+    ).expect("Failed to execute command");
 
-    let plist = [DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR0_WASH".to_string(),
-        display_name: "Thompsons Ground Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    }, DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR0_DRY".to_string(),
-        display_name: "Thompsons Ground Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    },DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR1_WASH".to_string(),
-        display_name: "Thompsons First Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    }, DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR1_DRY".to_string(),
-        display_name: "Thompsons First Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    }, DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR2_WASH".to_string(),
-        display_name: "Thompsons Top Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    },
-    DeviceObjectSQL {
-        device_id: "THOMPSONS_FLOOR2_DRY".to_string(),
-        display_name: "Thompsons Top Floor Dryer".to_string(),
-        is_on: false,
-        last_updated: chrono::Local::now().to_string(),
-        last_changed: chrono::Local::now().to_string()
-    }];
+    let now = chrono::Local::now().to_rfc3339();
+
+    let plist = [
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR0_WASH".to_string(),
+            display_name: "Thompsons Ground Floor Washing Machine".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        },
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR0_DRY".to_string(),
+            display_name: "Thompsons Ground Floor Dryer".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        },
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR1_WASH".to_string(),
+            display_name: "Thompsons First Floor Washing Machine".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        },
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR1_DRY".to_string(),
+            display_name: "Thompsons First Floor Dryer".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        },
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR2_WASH".to_string(),
+            display_name: "Thompsons Top Floor Washing Machine".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        },
+        DeviceObjectSQL {
+            device_id: "THOMPSONS_FLOOR2_DRY".to_string(),
+            display_name: "Thompsons Top Floor Dryer".to_string(),
+            is_on: false,
+            last_updated: now.clone(),
+            last_changed: now.clone()
+        }
+    ];
 
     for p in plist {
         conn.execute(
@@ -214,7 +259,10 @@ async fn setup_sqlite_db() {
 async fn main() {
     let app = Router::new()
         .route("/get/{device_id}", get(get_data))
-        .route("/set", post(set_data).get(index));
+        .route("/set", post(set_data).get(index))
+        .route("/", get(index))
+        .route("/index.js", get(index_js))
+        .route("/index.css", get(index_css));
 
     if !std::path::Path::new("data.db").exists() {
         setup_sqlite_db().await;
