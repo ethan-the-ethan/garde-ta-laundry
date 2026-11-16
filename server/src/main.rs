@@ -7,6 +7,7 @@ use axum::http::{Response, StatusCode};
 use axum::extract::Path;
 use tokio;
 use rusqlite::{Connection, Result};
+use std::env;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all(deserialize = "camelCase", serialize = "camelCase"))]
@@ -257,6 +258,12 @@ async fn setup_sqlite_db() {
 
 #[tokio::main]
 async fn main() {
+    let args: Vec<String> = env::args().collect();
+    let addr: &String = match args.get(1) {
+        Some(a) => a,
+        None => &String::from("localhost:3000")
+    };
+
     let app = Router::new()
         .route("/get/{device_id}", get(get_data))
         .route("/set", post(set_data).get(index))
@@ -268,10 +275,12 @@ async fn main() {
         setup_sqlite_db().await;
     }
 
+    println!("Starting server on {addr}");
+
     axum::serve(
-        tokio::net::TcpListener::bind("localhost:3000")
+        tokio::net::TcpListener::bind(addr)
             .await
-            .unwrap(),
+            .expect(&format!("ERROR: Could not bind to supplied address '{addr}'. Please check your permissions or select a different address. Details")[..]),
         app,
     )
     .await
