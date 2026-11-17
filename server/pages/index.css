@@ -4,24 +4,124 @@ body {
     font-family: inter, Arial, Helvetica, sans-serif;
 }
 
-.in_use_div {
-    background-color: orangered;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    min-width: 35px;
-    text-align: center;
-    max-width: 50px;
+@media (min-width: 700px) {
+    .in_use_div_two {
+        background-color: goldenrod;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        min-width: 300px;
+    }
+
+    .not_in_use_div_two {
+        background-color: forestgreen;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        min-width: 300px;
+    }
+
+    .unknown_div {
+        background-color: lightgray;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        min-width: 300px;
+    }
+
+    .available_timeout_div {
+        background-color: darkseagreen;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        min-width: 300px;
+    }
+
+    .in_use_timeout_div {
+        background-color: palegoldenrod;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        min-width: 300px;
+    }
 }
 
-.not_in_use_div {
-    background-color: forestgreen;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    min-width: 35px;
-    text-align: center;
-    max-width: 80px;
+@media (max-width: 700px) {
+    .in_use_div_two {
+        background-color: goldenrod;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        width: 92%;
+    }
+
+    .not_in_use_div_two {
+        background-color: forestgreen;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        width: 92%;
+    }
+
+    .unknown_div {
+        background-color: lightgray;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        width: 92%;
+    }
+
+    .available_timeout_div {
+        background-color: darkseagreen;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        width: 92%;
+    }
+
+    .in_use_timeout_div {
+        background-color: palegoldenrod;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left;
+        display: inline-block;
+        margin: 5px;
+        width: 92%;
+    }
+}
+
+
+.last_updated_text {
+    float:right;
+    font-size: 7pt;
 }
 
 .machine_div {
