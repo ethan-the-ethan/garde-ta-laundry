@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>About & FAQ | GTL</title>
+    </head>
+    <body>
+        <div style="width: 100%;">
+            <b>Garde Ta Laundry</b><br><i>30 Thompsons Lane Laundry Availability</i>
+
+            <br><br>
+
+            <a class="link" href="../">Return to Dashboard</a>
+            <div class="blurb">
+                <br>
+                Hello! Thanks for checking out our website! <br>
+
+                This is Garde ta Laundry, a website that allows you to see when the Thompson's Lane washers are in use from the comfort of your own room. Or the library. Or whatever. <br>
+
+                <p><b>Q. Why have you taped electronics to the washing machines?</b></p>
+                Principally, they're just vibration detectors that report whether or not their respective machine is in use to our webserver. You can then access that data here.
+                <br>
+
+                <p><b>Q. I just went to the washer and the website was wrong!</b></p>
+                Ah! That's annoying. If you find this happening a lot, please contact us (see below)!
+                <br>
+
+                <p><b>Q. Can I see the code?</b></p>
+                Yes, it's on <a class="link" href="https://github.com/ethan-the-ethan/garde-ta-laundry">Github</a>!
+                <br>
+
+                <p><b>Q. What do the colours mean?</b></p>
+                <div class="about_key_largescreen" style="grid-template-rows: auto auto auto auto; grid-template-columns: auto auto; width: 650px;">
+                    <a style="justify-self: center; align-self: center;">Updates from API <b>under</b> 10mins ago</a>
+                    <a style="justify-self: center; align-self: center;">Updates from API <b>over</b> 10mins ago</a>
+                    <div class="machine_div">
+
+                        <div class="not_in_use_div_two">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Available</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 3m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+                    <div class="machine_div">
+                        <div class="available_timeout_div" onclick="alert(&quot;This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!&quot;)">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Available</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 25m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+                    <div class="machine_div">
+                        <div class="in_use_div_two">
+                            <a style="float: left;">Dryer</a> <a style="float:right;"><b>In use</b> (for 42m)</a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  5% 60% 35%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 0m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+                    <div class="machine_div">
+                        <div class="in_use_timeout_div" onclick="alert(&quot;This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!&quot;)">
+                            <a style="float: left;">Dryer</a> <a style="float:right;"><b>In use</b> (for 1h 3m)</a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns: 32.5% 15% 52.5%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 2h 31m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+                    <div class="machine_div">
+                        <div class="unknown_div">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Unknown</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated NaN ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about_key_smallscreen" style="grid-template-rows: auto auto auto auto; grid-template-columns: auto; width: 97%;">
+                    <a style="justify-self: center; align-self: center;">Updates from API <b>under</b> 10mins ago</a>
+                    <div class="machine_div">
+                        <div class="not_in_use_div_two">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Available</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 3m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+
+                    <div class="machine_div">
+                        <div class="in_use_div_two">
+                            <a style="float: left;">Dryer</a> <a style="float:right;"><b>In use</b> (for 42m)</a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  5% 60% 35%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 0m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+
+                    <div class="machine_div">
+                        <div class="unknown_div">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Unknown</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated NaN ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+
+                    <a style="justify-self: center; align-self: center;"><br>Updates from API <b>over</b> 10mins ago</a>
+                    <div class="machine_div">
+                        <div class="available_timeout_div" onclick="alert(&quot;This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!&quot;)">
+                            <a style="float: left;">Washer</a> <a style="float:right;"><b>Available</b></a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns:  100%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 25m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+
+                    <div class="machine_div">
+                        <div class="in_use_timeout_div" onclick="alert(&quot;This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!&quot;)">
+                            <a style="float: left;">Dryer</a> <a style="float:right;"><b>In use</b> (for 1h 3m)</a><br>
+                            <div class="progress_bar" style="display: grid; grid-template-columns: 32.5% 15% 52.5%; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;">
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                                <div style="background-color: forestgreen; height: 5px;">&nbsp;</div>
+                                <div style="background-color: red; height: 5px;">&nbsp;</div>
+                            </div>
+                        <div style="display:grid; grid-template-columns: 20% 60% 20%"><i style="font-size: 8pt; float: left; padding-top:5px; justify-self: left;">2h ago</i><a style="font-size: 8pt; float: none; padding-top:5px; justify-self: center;">Last updated 2h 31m ago</a><i style="font-size:8pt; float: right; padding-top:5px; justify-self: right;">Now</i></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p>The little progress bar-looking elements show the state of the corresponding machine from two hours ago to now, to compensate for any minor wrong readings!</p>
+
+                <p><b>Contact us</b></p>
+                If you have any other questions, suggestions or concerns, we'd love to hear from you. You can contact either of us by email:
+                <ul>
+                    <li>Ethan (<a class="link" href="mailto:erl54@cam.ac.uk">email</a>)</li>
+                    <li>Ken (<a class="link" href="mailto:kak50@cam.ac.uk">email</a>)</li>
+                </ul>
+
+                <p style="display: flex; justify-content: center; text-align: center;"><a href='../' style="font-size: 10pt; color: darkgray; text-decoration: underline dashed; width: 100%;">return to dashboard</a></p>
+            </div>
+        </div>
+    </body>
+</html>

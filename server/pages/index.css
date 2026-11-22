@@ -63,6 +63,14 @@ body {
     text-align: center;
 }
 
+.link {
+    color: grey;
+    display: inline-block;
+    text-align: center;
+    text-decoration: underline dashed;
+}
+
+
 
 @media (min-width: 700px) {
     .in_use_div_two {
@@ -94,6 +102,19 @@ body {
     .contact_text {
         width: 650px;
     }
+
+    .about_key_largescreen {
+        display: grid;
+    }
+
+    .about_key_smallscreen {
+        display: none;
+    }
+
+    .blurb {
+        max-width: 70%;
+        margin-left: 5px;
+    }
 }
 
 @media (max-width: 700px) {
@@ -119,5 +140,18 @@ body {
 
     .contact_text {
         width: 100%;
+    }
+
+    .about_key_largescreen {
+        display: none;
+    }
+
+    .about_key_smallscreen {
+        display: grid;
+    }
+
+    .blurb {
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }
