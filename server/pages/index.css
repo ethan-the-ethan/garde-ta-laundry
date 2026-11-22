@@ -4,129 +4,120 @@ body {
     font-family: inter, Arial, Helvetica, sans-serif;
 }
 
+.in_use_div_two {
+    background-color: lightpink;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    display: inline-block;
+    margin: 5px;
+}
+
+.not_in_use_div_two {
+    background-color: darkseagreen;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    display: inline-block;
+    margin: 5px;
+}
+
+.unknown_div {
+    background-color: lightgray;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    display: inline-block;
+    margin: 5px;
+}
+
+.available_timeout_div {
+    background-color: darkseagreen;
+    opacity: 0.7;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    display: inline-block;
+    margin: 5px;
+}
+
+.in_use_timeout_div {
+    background-color: lightpink;
+    opacity: 0.7;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    display: inline-block;
+    margin: 5px;
+}
+
+.contact_text {
+    color: grey;
+    font-size: 10pt;
+    display: inline-block;
+    text-align: center;
+}
+
+
 @media (min-width: 700px) {
     .in_use_div_two {
-        background-color: goldenrod;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         min-width: 300px;
     }
 
     .not_in_use_div_two {
-        background-color: forestgreen;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         min-width: 300px;
     }
 
     .unknown_div {
-        background-color: lightgray;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         min-width: 300px;
     }
 
     .available_timeout_div {
-        background-color: darkseagreen;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         min-width: 300px;
     }
 
     .in_use_timeout_div {
-        background-color: palegoldenrod;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         min-width: 300px;
+    }
+
+    .machine_div {
+        align-items: center;
+        align-content: center;
+        display: inline-block;
+    }
+
+    .contact_text {
+        width: 650px;
     }
 }
 
 @media (max-width: 700px) {
     .in_use_div_two {
-        background-color: goldenrod;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         width: 92%;
     }
 
     .not_in_use_div_two {
-        background-color: forestgreen;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         width: 92%;
     }
 
     .unknown_div {
-        background-color: lightgray;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         width: 92%;
     }
 
     .available_timeout_div {
-        background-color: darkseagreen;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         width: 92%;
     }
 
     .in_use_timeout_div {
-        background-color: palegoldenrod;
-        color: black;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: left;
-        display: inline-block;
-        margin: 5px;
         width: 92%;
     }
-}
 
-
-.last_updated_text {
-    float:right;
-    font-size: 7pt;
-}
-
-.machine_div {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: lightgray;
+    .contact_text {
+        width: 100%;
+    }
 }

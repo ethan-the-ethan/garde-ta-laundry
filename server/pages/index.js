@@ -22,13 +22,14 @@ async function fill_floor(floor_id, washer_machine_id, dryer_machine_id) {
     let div_class = "unknown_div";
     let text = "<b>Unknown</b>";
     let last_updated_formatted = "";
+    let progbar = "";
 
     let response = await fetch("/get/" + v[0]);
     if (response.status == 200) {
       let r = await response.json();
-      let is_on = r.is_on;
-      let last_changed = new Date(r.last_changed);
-      let last_updated = new Date(r.last_updated);
+      let is_on = r.device.isOn;
+      let last_changed = new Date(r.device.lastChanged);
+      let last_updated = new Date(r.device.lastUpdated);
 
       let difference_formatted = generate_formatted_time_difference(last_updated, last_changed);
       last_updated_formatted = generate_formatted_time_difference(new Date(Date.now()), last_updated);
@@ -36,23 +37,47 @@ async function fill_floor(floor_id, washer_machine_id, dryer_machine_id) {
       let difference = Date.now() - last_updated.getTime();
 
       if (difference > 600000) {
-        div_class = "available_timeout_div";
+        div_class = "available_timeout_div' onclick='alert(\"This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!\")";
       } else {
         div_class = "not_in_use_div_two";
       }
 
-      text = "<b>Available</b> (for " + difference_formatted + ")";
+      text = "<b>Available</b>"; // (for " + difference_formatted + ")";
       if (is_on) {
         if (difference > 600000) {
-          div_class = "in_use_timeout_div";
+          div_class = "in_use_timeout_div' onclick=\'alert(\"This machine has not recieved any updates for more than 10 minutes, so take this data with a pinch of salt!\")";
         } else {
           div_class = "in_use_div_two";
         }
         text = "<b>In use</b> (for " + difference_formatted + ")"
       }
+
+      // Generate history "progress bar" thing
+      let column_string = "";
+      let history = r.history;
+      for (entry of history) {
+        column_string += (" " + Math.round(entry[0]) + "%")
+      }
+
+      console.log(column_string);
+
+      progbar += "<div class='progress_bar' style='display: grid; grid-template-columns: " + column_string + "; width: 100%; height: 5px; margin-top: 7px; border: 2px 50% white;'>"
+
+      for (entry of history) {
+        progbar += "<div style='background-color: " + (entry[1] ? "red" : "forestgreen") + "; height: 5px;'>&nbsp</div>";
+      }
+
+      progbar += "</div>"
     }
 
-    inner_html += "<div class='" + div_class + "'>" + v[1] + " <span class='last_updated_text'>Updated " + last_updated_formatted + " ago</span> <br>" + text + "</div>";
+    inner_html += "<div class='machine_div'>" +
+      "<div class='" + div_class + "'> <a style='float: left;'>" + v[1] + "</a><a style='float:right;'>" + text + "</a><br>" +
+      progbar +
+      "<div style='display:grid; grid-template-columns: 20% 60% 20%'>" +
+      "<i style='font-size: 8pt; float: left; padding-top:5px; justify-self: left;'>2h ago</i>" +
+      "<a style='font-size: 8pt; float: none; padding-top:5px; justify-self: center;'>Last updated " + last_updated_formatted + " ago</a>" +
+      "<i style='font-size:8pt; float: right; padding-top:5px; justify-self: right;'>Now</i>" +
+      "</div></div></div>";
   }
 
   document.getElementById(floor_id).innerHTML = inner_html;
